@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>layout</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="ISO-8859-1">
+	<link rel="stylesheet" type="text/css" href="main.css">
+</head>
+
+<script>
+	function loadData() {
+	  var xmlhttp = new XMLHttpRequest();
+	  xmlhttp.onreadystatechange = function() {
+		  if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			  document.getElementById("txtHint").innerHTML = xmlhttp.responseText;
+		  }
+	  }
+	  xmlhttp.open("GET", "load.php", true);
+	  xmlhttp.send();
+  
+  	} 
+  function showHint(str) {
+	  if (str.length == 0) { 
+		  document.getElementById("txtHint").innerHTML = "";
+		  return;
+	  } else {
+		  var xmlhttp = new XMLHttpRequest();
+		  xmlhttp.onreadystatechange = function() {
+			  if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				  document.getElementById("txtHint").innerHTML = xmlhttp.responseText;
+			  }
+		  }
+		  xmlhttp.open("GET", "trazilica.php?s=" + str, true);
+		  xmlhttp.send();
+	  }
+  }
+  </script>
+<body onload="loadData()">
+
+  <div class="container">
+  	   <div class="nav">
+			<ul class="topnav">
+				<li><a class="active" href="#home">Home</a></li>
+				<li><a href="#courses">Courses</a></li>
+				<li><a href="#contact">Contact</a></li>
+				<li class="right"><a href="#about">About</a></li>
+		  </ul> 
+  	   	  <h1>Telerik university</h1>
+		 </div>
+
+  	   <div class="header">
+			<form> 
+				Search: <input type="text" class="search" onkeyup="showHint(this.value)">
+			</form>
+			<div id="txtHint"></div>
+		</div>
+
+  	   <section class="section1">
+  	   	     <h1>Section1</h1>
+  	   	     <div class="content">
+  	   	     	 <div class="card">
+  	   	     	 	  <div class="box">
+  	   	     	 	  	  Card1
+  	   	     	 	  </div>
+  	   	     	 </div>
+  	   	     	 <div class="card">
+  	   	     	 	  <div class="box">
+  	   	     	 	  	  Card2
+  	   	     	 	  </div>
+  	   	     	 </div>
+  	   	     	 <div class="card">
+  	   	     	 	  <div class="box">
+  	   	     	 	  	  Card3
+  	   	     	 	  </div>
+  	   	     	 </div>
+  	   	     	 <div class="card">
+  	   	     	 	  <div class="box">
+  	   	     	 	  	  Card4
+  	   	     	 	  </div>
+  	   	     	 </div>
+  	   	     </div>
+  	   </section>
+
+  	   
+       <footer>
+       	 <h1>Footer</h1>
+       </footer>
+  	   <div class="clear">
+  	   </div>
+  </div>
+
+</body>
+</html>
