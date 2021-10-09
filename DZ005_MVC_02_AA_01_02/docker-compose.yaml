@@ -1,0 +1,25 @@
+version: "3"
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: eT843XGgfVh9kPLB
+      MYSQL_DATABASE: university
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: Un1v3r5ity2021!
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    restart: always
+    ports:
+      - 8081:80
+volumes:
+  dbdata:

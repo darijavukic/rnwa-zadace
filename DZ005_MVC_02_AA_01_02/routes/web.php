@@ -1,0 +1,37 @@
+<?php
+
+use App\Http\Controllers\UserController;
+
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ProfessorController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\TitleController;
+use App\Http\Controllers\FacultyController;
+
+use Illuminate\Support\Facades\Route;
+
+Route::group(['middleware' => ['auth:sanctum', 'verified']], function() {
+    Route::get('/', function () {
+        return view('welcome');
+    });
+});
+
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
+
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
+
+Route::get('/students', [StudentController::class, 'index'])->name('students');
+Route::get('/professors', [ProfessorController::class, 'index'])->name('professors');
+Route::get('/courses', [CourseController::class, 'index'])->name('courses');
+Route::get('/departments', [DepartmentController::class, 'index'])->name('departments');
+Route::get('/faculties', [FacultyController::class, 'index'])->name('faculties');
+Route::get('/titles', [TitleController::class, 'index'])->name('titles');
+
+
+Route::get('auth/google', [UserController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback', [UserController::class, 'handleGoogleCallback']);
