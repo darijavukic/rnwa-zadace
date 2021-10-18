@@ -11,6 +11,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Ime</th>
                     <th scope="col">Odjel</th>
+                    <th scope="col">Akcija</th>
                 </tr>
             </thead>
             <tbody>
@@ -19,6 +20,10 @@
                     <th scope="row">{{ $professor->id }}</th>
                     <td>{{ $professor->name }}</td>
                     <td>{{ $departments->where('id', $professor->department_id)->pluck('name')->first() }}</td>
+                    <td>
+                        <button type="button" class="btn btn-warning" onclick="window.location = '/professors/{{$professor->id}}'">Uredi</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteProfessor({{$professor->id}})">Obriši</button>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
@@ -55,6 +60,27 @@
 @stop
 @section('scripts')
     <script>
+        function deleteProfessor(professor) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            })
+
+            $.ajax({
+                url: "{{ url('/api/professor') }}",
+                method: 'delete',
+                data: {
+                    _token: '{{csrf_token()}}',
+                    id: professor
+                },
+                success: function(res) {
+                    console.log(res)
+
+                    window.location.reload()
+                }
+            });
+        }
         $(document).ready(function() {
             $('#addProfessorTrigger').on('click', () => {
                 $('#addProfessorModal').modal('toggle')

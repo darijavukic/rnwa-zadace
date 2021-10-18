@@ -26,19 +26,30 @@ Route::post('/user/login', [UserController::class, 'login']);
 
 Route::post('/faculty', [FacultyController::class, 'create']);
 Route::get('/faculty', [FacultyController::class, 'index']);
+Route::delete('/faculty', [FacultyController::class, 'delete']);
+Route::put('/faculty', [FacultyController::class, 'update']);
 
 Route::post('/student', [StudentController::class, 'create']);
 Route::get('/student', [StudentController::class, 'index']);
+Route::delete('/student', [StudentController::class, 'delete']);
+Route::put('/student', [StudentController::class, 'update']);
+
 Route::put('/student/course', [StudentController::class, 'addToCourse']);
 
 Route::post('/course', [CourseController::class, 'create']);
 Route::get('/course', [CourseController::class, 'index']);
+Route::delete('/course', [CourseController::class, 'delete']);
+Route::put('/course', [CourseController::class, 'update']);
 
 Route::post('/department', [DepartmentController::class, 'create']);
 Route::get('/department', [DepartmentController::class, 'index']);
+Route::delete('/department', [DepartmentController::class, 'delete']);
+Route::put('/department', [DepartmentController::class, 'update']);
 
 Route::post('/professor', [ProfessorController::class, 'create']);
 Route::get('/professor', [ProfessorController::class, 'index']);
+Route::delete('/professor', [ProfessorController::class, 'delete']);
+Route::put('/professor', [ProfessorController::class, 'update']);
 
 Route::post('/title', [TitleController::class, 'create']);
 Route::get('/title', [TitleController::class, 'index']);

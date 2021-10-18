@@ -11,6 +11,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Ime</th>
                     <th scope="col">Fakultet</th>
+                    <th scope="col">Akcija</th>
                 </tr>
             </thead>
             <tbody>
@@ -19,6 +20,10 @@
                     <th scope="row">{{ $student->id }}</th>
                     <td>{{ $student->name }}</td>
                     <td>{{ $faculties->where('id', $student->faculty_id)->pluck('name')->first() }}</td>
+                    <td>
+                        <button type="button" class="btn btn-warning editStudentTrigger" onclick="window.location = '/students/{{$student->id}}'">Uredi</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteStudent({{$student->id}})">Obriši</button>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
@@ -55,10 +60,31 @@
 @stop
 @section('scripts')
     <script>
+        function deleteStudent(student) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            })
+
+            $.ajax({
+                url: "{{ url('/api/student') }}",
+                method: 'delete',
+                data: {
+                    _token: '{{csrf_token()}}',
+                    id: student
+                },
+                success: function(res) {
+                    console.log(res)
+
+                    window.location.reload()
+                }
+            });
+        }
         $(document).ready(function() {
             $('#addStudentTrigger').on('click', () => {
                 $('#addStudentModal').modal('toggle')
-            })
+            });
 
             $('.closeStudent').on('click', () => {
                 $('#addStudentModal').modal('toggle')

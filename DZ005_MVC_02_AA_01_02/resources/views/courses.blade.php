@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', '')
+@section('title', 'Predmeti')
 
 @section('content')
     <h1 class="w-100 mt-5">Predmeti</h1>
@@ -12,6 +12,7 @@
                     <th scope="col">Ime</th>
                     <th scope="col">Profesor</th>
                     <th scope="col">Odjel</th>
+                    <th scope="col">Akcija</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,6 +22,10 @@
                     <td>{{ $course->name }}</td>
                     <td>{{ $professors->where('id', $course->professor_id)->pluck('name')->first() }}</td>
                     <td>{{ $departments->where('id', $course->department_id)->pluck('name')->first() }}</td>
+                    <td>
+                        <button type="button" class="btn btn-warning" onclick="window.location = '/courses/{{$course->id}}'">Uredi</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteCourse({{$course->id}})">Obriši</button>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
@@ -33,7 +38,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addCourseModalLabel">Dodaj profesora</h5>
+                        <h5 class="modal-title" id="addCourseModalLabel">Dodaj predmet</h5>
                         <button type="button" class="close closeCourse" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -64,6 +69,27 @@
 @stop
 @section('scripts')
     <script>
+        function deleteCourse(course) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            })
+
+            $.ajax({
+                url: "{{ url('/api/course') }}",
+                method: 'delete',
+                data: {
+                    _token: '{{csrf_token()}}',
+                    id: course
+                },
+                success: function(res) {
+                    console.log(res)
+
+                    window.location.reload()
+                }
+            });
+        }
         $(document).ready(function() {
             $('#addCourseTrigger').on('click', () => {
                 $('#addCourseModal').modal('toggle')
@@ -92,7 +118,7 @@
                     success: function(res) {
                         console.log(res)
 
-                        $('#addProfessorModal').modal('toggle')
+                        $('#addCourseModal').modal('toggle')
                         window.location.reload()
                     }
                 })

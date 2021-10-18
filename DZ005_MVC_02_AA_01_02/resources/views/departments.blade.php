@@ -11,6 +11,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Ime odjela</th>
                     <th scope="col">Fakultet</th>
+                    <th scope="col">AKcija</th>
                 </tr>
             </thead>
             <tbody>
@@ -19,6 +20,10 @@
                     <th scope="row">{{ $department->id }}</th>
                     <td>{{ $department->name }}</td>
                     <td>{{ $faculties->where('id', $department->faculty_id)->pluck('name')->first() }}</td>
+                    <td>
+                        <button type="button" class="btn btn-warning" onclick="window.location = '/departments/{{$department->id}}'">Uredi</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteDepartment({{$department->id}})">Obriši</button>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
@@ -30,7 +35,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addDepartmentModalLabel">Dodaj profesora</h5>
+                        <h5 class="modal-title" id="addDepartmentModalLabel">Dodaj odjel</h5>
                         <button type="button" class="close closeDepartment" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -55,6 +60,27 @@
 @stop
 @section('scripts')
     <script>
+        function deleteDepartment(department) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            })
+
+            $.ajax({
+                url: "{{ url('/api/department') }}",
+                method: 'delete',
+                data: {
+                    _token: '{{csrf_token()}}',
+                    id: department
+                },
+                success: function(res) {
+                    console.log(res)
+
+                    window.location.reload()
+                }
+            });
+        }
         $(document).ready(function() {
             $('#addDepartmentTrigger').on('click', () => {
                 $('#addDepartmentModal').modal('toggle')
@@ -82,7 +108,7 @@
                     success: function(res) {
                         console.log(res)
 
-                        $('#addProfessorModal').modal('toggle')
+                        $('#addDepartmentModal').modal('toggle')
                         window.location.reload()
                     }
                 })

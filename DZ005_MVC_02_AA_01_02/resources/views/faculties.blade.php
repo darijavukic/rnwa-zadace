@@ -10,6 +10,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Ime fakulteta</th>
+                    <th scope="col">Akcija</th>
                 </tr>
             </thead>
             <tbody>
@@ -17,6 +18,10 @@
                 <tr>
                     <th scope="row">{{ $faculty->id }}</th>
                     <td>{{ $faculty->name }}</td>
+                    <td>
+                        <button type="button" class="btn btn-warning" onclick="window.location = '/faculties/{{$faculty->id}}'">Uredi</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteFaculty({{$faculty->id}})">Obriši</button>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
@@ -28,7 +33,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addFacultyModalLabel">Dodaj profesora</h5>
+                        <h5 class="modal-title" id="addFacultyModalLabel">Dodaj fakultet</h5>
                         <button type="button" class="close closeFaculty" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -47,6 +52,27 @@
 @stop
 @section('scripts')
     <script>
+        function deleteFaculty(faculty) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            })
+
+            $.ajax({
+                url: "{{ url('/api/faculty') }}",
+                method: 'delete',
+                data: {
+                    _token: '{{csrf_token()}}',
+                    id: faculty
+                },
+                success: function(res) {
+                    console.log(res)
+
+                    window.location.reload()
+                }
+            });
+        }
         $(document).ready(function() {
             $('#addFacultyTrigger').on('click', () => {
                 $('#addFacultyModal').modal('toggle')
@@ -73,7 +99,7 @@
                     success: function(res) {
                         console.log(res)
 
-                        $('#addProfessorModal').modal('toggle')
+                        $('#addFacultyModal').modal('toggle')
                         window.location.reload()
                     }
                 })

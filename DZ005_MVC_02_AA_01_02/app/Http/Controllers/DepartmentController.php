@@ -32,4 +32,34 @@ class DepartmentController extends Controller
 
         return view('departments')->with(['departments' => $departments, 'faculties' => $faculties]);
     }
+
+    public function edit($id) {
+        $department = Department::with('faculty')->find($id);
+        $faculties = Faculty::all();
+        return view('edit.departments')->with(['department' => $department, 'faculties' => $faculties]);
+    }
+
+    public function delete(Request $request) : JsonResponse {
+        $attr = $request->validate([
+            'id' => 'numeric|required'
+        ]);
+
+        Department::destroy([$attr['id']]);
+        return $this->success(null, 'Department deleted successfully');
+    }
+
+    public function update(Request $request) : JsonResponse {
+        $attr = $request->validate([
+            'id' => 'numeric|required',
+            'name' => 'string|required|min:3|max:45',
+            'faculty_id' => 'numeric|required'
+        ]);
+
+        $department = Department::find($attr['id']);
+        $department->name = $attr['name'];
+        $department->faculty_id = $attr['faculty_id'];
+        $department->save();
+
+        return $this->success($department, 'Department updated successfully');
+    }
 }
